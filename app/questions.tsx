@@ -1,4 +1,4 @@
-import { ScrollView, Dimensions, StyleSheet, Text, TouchableOpacity, View,Image } from 'react-native';
+import { ScrollView, Dimensions, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useState } from 'react';
@@ -10,6 +10,19 @@ import { goToNextQuestion, goToPreviousQuestion, getFrageByNumberDE, getFrageByN
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+export const imageMap: { [key: number]: any } = {
+  21: require('@/assets/images/questionImg/21.png'),
+  55: require('@/assets/images/questionImg/55.png'),
+  70: require('@/assets/images/questionImg/70.png'),
+  130: require('@/assets/images/questionImg/130.png'),
+  176: require('@/assets/images/questionImg/176.png'),
+  181: require('@/assets/images/questionImg/181.png'),
+  187: require('@/assets/images/questionImg/187.png'),
+  209: require('@/assets/images/questionImg/209.png'),
+  216: require('@/assets/images/questionImg/216.png'),
+  226: require('@/assets/images/questionImg/226.png'),
+  // и т.д.
+};
 
 export default function QuestionsScreen() {
   const theme = useColorScheme() ?? 'light';
@@ -73,7 +86,22 @@ export default function QuestionsScreen() {
           russianText={frageRU.options[3]}
           answer={frageDE.answer}
         />
-        <Image source={require(frageDE.image)} style={{ width: 100, height: 100 }} />
+
+        {frageDE.image && imageMap[frageDE.question_number] && (
+          <Image
+            source={imageMap[frageDE.question_number]}
+            style={{
+              width: SCREEN_WIDTH - 20,    // ширина с учётом отступов
+              aspectRatio: 1,              // сохраняем пропорции
+              marginTop: 20,               // небольшой отступ сверху
+              marginBottom: 16,            // отступ снизу
+              alignSelf: 'center',         // центрирование
+            }}
+            resizeMode="cover"
+          />
+        )}
+
+
       </ScrollView>
 
       {/* Footer всегда закреплён */}
