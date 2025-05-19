@@ -1,11 +1,13 @@
-import { ScrollView, Dimensions, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useState } from 'react';
 import { AnswerOption } from '@/components/AnswerOption';
 import { QuestionOption } from '@/components/QuestionOption';
 import QuestionPicker from '@/components/QuestionPicker';
-import { goToNextQuestion, goToPreviousQuestion, getFrageByNumberDE, getFrageByNumberRU } from '@/constants/Functions';
+import { getFrageByNumberDE, getFrageByNumberRU, goToNextQuestion, goToPreviousQuestion } from '@/constants/Functions';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { usePersistentState } from '../hooks/usePersistentState';
+
 
 
 
@@ -27,7 +29,9 @@ export const imageMap: { [key: number]: any } = {
 export default function QuestionsScreen() {
   const theme = useColorScheme() ?? 'light';
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [questionNumber, setQuestionNumber] = useState(21);
+  // const [questionNumber, setQuestionNumber] = useState(1);
+  const [questionNumber, setQuestionNumber] = usePersistentState<number>('question_number', 1);
+
   const [showTranslation, setShowTranslation] = useState(false);
 
   const frageDE = getFrageByNumberDE(questionNumber);
@@ -88,19 +92,27 @@ export default function QuestionsScreen() {
         />
 
         {frageDE.image && imageMap[frageDE.question_number] && (
-          <Image
-            source={imageMap[frageDE.question_number]}
+          <View
             style={{
-              width: SCREEN_WIDTH - 20,    // ширина с учётом отступов
-              aspectRatio: 1,              // сохраняем пропорции
-              marginTop: 20,               // небольшой отступ сверху
-              marginBottom: 16,            // отступ снизу
-              alignSelf: 'center',         // центрирование
+              width: SCREEN_WIDTH - 20,
+              height: 150,
+              alignSelf: 'center',
+              overflow: 'hidden',       // чтобы обрезать картинку, если она выходит за пределы
+              marginTop: 20,
+              marginBottom: 16,
+              borderRadius: 8,          // по желанию
             }}
-            resizeMode="cover"
-          />
+          >
+            <Image
+              source={imageMap[frageDE.question_number]}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+              resizeMode="contain"
+            />
+          </View>
         )}
-
 
       </ScrollView>
 

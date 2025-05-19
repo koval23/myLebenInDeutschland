@@ -1,3 +1,4 @@
+import LanguageSelector from '@/components/LanguageSelector';
 import { ThemedText } from '@/components/ThemedText';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +17,8 @@ export default function HomeScreen() {
       <ThemedText style={styles.title}>
         Leben in Deutschland
       </ThemedText>
+
+      <LanguageSelector />
 
       <View style={styles.card}>
         <View style={styles.dropdownContainer}>
