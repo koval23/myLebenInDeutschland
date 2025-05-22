@@ -6,11 +6,15 @@ import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useCity } from '@/constants/CityContext';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [selectedCity, setSelectedCity] = useState<string>();
+  // const [selectedCity, setSelectedCity] = useState<string>();
+  const { selectedCity, setSelectedCity } = useCity();
+
   const theme = useColorScheme() ?? 'light';
+
 
   return (
     <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f4f4f4' : '#1c1c1e' }]}>
@@ -50,9 +54,9 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.buttonBox}>
-          <MenuButton title="300 вопросов" onPress={() => router.push('/questions')} />
-          <MenuButton title="Штат вопросы" onPress={() => router.push('/states')} />
-          <MenuButton title="Словарь" onPress={() => router.push('/dictionary')} />
+          <MenuButton title="Allgemaine Frage (300)" onPress={() => router.push('/questions')} />
+          <MenuButton title="Bundesland Fragen (10)" onPress={() => router.push('/states')} />
+          <MenuButton title="Wörterbuch" onPress={() => router.push('/dictionary')} />
         </View>
       </View>
     </View>
@@ -119,3 +123,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+

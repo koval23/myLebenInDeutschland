@@ -5,6 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { CityProvider } from '@/constants/CityContext'; // добавь это
+
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -18,15 +20,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="questions" />
-        <Stack.Screen name="states" />
-        <Stack.Screen name="dictionary" />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <CityProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: true, title: 'Home' }} />
+          <Stack.Screen name="questions" options={{ title: 'Alle Frafen' }}/>
+          <Stack.Screen name="states"/>
+          <Stack.Screen name="dictionary" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </CityProvider >
   );
 }
