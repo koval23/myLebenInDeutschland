@@ -1,14 +1,13 @@
-import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { AnswerTest } from '@/components/AnswerTest';
 import { QuestionTest } from '@/components/QuestionTest';
 import { TestResult } from '@/components/Result';
 import { useCity } from '@/constants/CityContext';
-import { compareAndCount, getRandomIndexes, goToNextQuestionTest } from '@/constants/Functions';
+import { compareAndCount, getRandomIndexes } from '@/constants/Functions';
 import { imageMapState, questionsDE, questionsStateDE } from '@/constants/Question';
 import { QuestionDE } from '@/constants/Types';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -31,16 +30,8 @@ export const imageMap: { [key: number]: any } = {
     226: require('@/assets/images/questionImg/226.png'),
 };
 
-// 🔁 Функция для генерации массива случайных индексов (уникальные)
-// function getRandomIndexes(length: number, count: number): number[] {
-//     const indexes = Array.from({ length }, (_, i) => i);
-//     const shuffled = indexes.sort(() => Math.random() - 0.5);
-//     return shuffled.slice(0, count);
-// }
-
 export default function TestScreen() {
     const theme = useColorScheme() ?? 'light';
-    // const [questionNumberTest, setQuestionNumberTest] = usePersistentState<number>('questionNumberTest', 1); // текущий номер вопроса
     const [questionNumberTest, setQuestionNumberTest] = useState<number>(1);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [correctCount, setCorrectCount] = useState<number>(0); // количество правильных ответов
@@ -55,7 +46,6 @@ export default function TestScreen() {
 
             const generalIndexes = getRandomIndexes(questionsDE.length, 30);
             const stateIndexes = getRandomIndexes(questionsStateDE[selectedCity].length, 3);
-
 
             const general = generalIndexes.map(i => ({
                 ...questionsDE[i],
@@ -80,33 +70,6 @@ export default function TestScreen() {
 
     // 🧠 Получаем текущий вопрос по индексу
     const frageDE = testQuestions[questionNumberTest - 1];
-
-    if (!frageDE || frageDE.question_number == null) {
-        return (
-            <View style={styles.container}>
-                <Text style={{ textAlign: 'center', marginTop: 100 }}>
-                    Вопросы загружаются...
-                </Text>
-            </View>
-        );
-    }
-    const key = `${selectedCity}_${frageDE.question_number}`;
-
-
-    const imageSource =
-        'source' in frageDE
-            ? imageMapState[key!]
-            : imageMap[frageDE.question_number];
-
-
-    if (testQuestions.length === 0) {
-        return (
-            <View style={styles.container}>
-                <Text style={{ textAlign: 'center', marginTop: 100 }}>Загрузка теста...</Text>
-            </View>
-        );
-    }
-
     // после прохождения РЕЗУЛЬАТЫ
     if (questionNumberTest > testQuestions.length) {
         return (
@@ -125,6 +88,32 @@ export default function TestScreen() {
                     setTestQuestions([...general, ...state]);
                 }}
             />
+        );
+    }
+
+    if (!frageDE || frageDE.question_number == null) {
+        return (
+            <View style={styles.container}>
+                <Text style={{ textAlign: 'center', marginTop: 100 }}>
+                    Вопросы загружаются...
+                </Text>
+            </View>
+        );
+    }
+    const key = `${selectedCity}_${frageDE.question_number}`;
+
+
+    const imageSource =
+        'source' in frageDE
+            ? imageMapState[key]
+            : imageMap[frageDE.question_number];
+
+
+    if (testQuestions.length === 0) {
+        return (
+            <View style={styles.container}>
+                <Text style={{ textAlign: 'center', marginTop: 100 }}>Загрузка теста...</Text>
+            </View>
         );
     }
 
@@ -156,114 +145,12 @@ export default function TestScreen() {
                             setTimeout(() => {
                                 setQuestionNumberTest((prev) => prev + 1);
                                 setSelectedOption(null);
-                            }, 1000);
+                            }, 500);
                         }}
                         germanText={option}
                         answer={frageDE.answer}
                     />
                 ))}
-
-
-                {/* <AnswerTest
-                    key={1}
-                    id={1}
-                    selected={selectedOption === 1}
-                    onSelect={(id) => {
-                        if (selectedOption !== null) return;
-
-                        setSelectedOption(id);
-
-                        const userAnswer = frageDE.options[0];
-                        const updated = compareAndCount(userAnswer, frageDE.answer, correctCount);
-                        setCorrectCount(updated);
-
-                        // ⏳ Автоматически переходим на следующий вопрос через 1 секунду
-                        setTimeout(() => {
-                            // goToNextQuestionTest(setQuestionNumberTest);
-                            setQuestionNumberTest((prev) => prev + 1);
-
-                            setSelectedOption(null);
-                        }, 1000);
-                    }}
-
-                    germanText={frageDE.options[0]}
-                    answer={frageDE.answer}
-                />
-                <AnswerTest
-                    key={2}
-                    id={2}
-                    selected={selectedOption === 2}
-                    onSelect={(id) => {
-                        if (selectedOption !== null) return;
-
-                        setSelectedOption(id);
-
-                        const userAnswer = frageDE.options[1];
-                        const updated = compareAndCount(userAnswer, frageDE.answer, correctCount);
-                        setCorrectCount(updated);
-
-                        // ⏳ Автоматически переходим на следующий вопрос через 1 секунду
-                        setTimeout(() => {
-                            // goToNextQuestionTest(setQuestionNumberTest);
-                            setQuestionNumberTest((prev) => prev + 1);
-
-                            setSelectedOption(null);
-                        }, 1000);
-                    }}
-
-                    germanText={frageDE.options[1]}
-                    answer={frageDE.answer}
-                />
-                <AnswerTest
-                    key={3}
-                    id={3}
-                    selected={selectedOption === 3}
-                    onSelect={(id) => {
-                        if (selectedOption !== null) return;
-
-                        setSelectedOption(id);
-
-                        const userAnswer = frageDE.options[2];
-                        const updated = compareAndCount(userAnswer, frageDE.answer, correctCount);
-                        setCorrectCount(updated);
-
-                        // ⏳ Автоматически переходим на следующий вопрос через 1 секунду
-                        setTimeout(() => {
-                            // goToNextQuestionTest(setQuestionNumberTest);
-                            setQuestionNumberTest((prev) => prev + 1);
-
-                            setSelectedOption(null);
-                        }, 1000);
-                    }}
-
-                    germanText={frageDE.options[2]}
-                    answer={frageDE.answer}
-                />
-                <AnswerTest
-                    key={4}
-                    id={4}
-                    selected={selectedOption === 4}
-                    onSelect={(id) => {
-                        if (selectedOption !== null) return;
-
-                        setSelectedOption(id);
-
-                        const userAnswer = frageDE.options[3];
-                        const updated = compareAndCount(userAnswer, frageDE.answer, correctCount);
-                        setCorrectCount(updated);
-
-                        // ⏳ Автоматически переходим на следующий вопрос через 1 секунду
-                        setTimeout(() => {
-                            //   goToNextQuestionTest(setQuestionNumberTest);
-                            setQuestionNumberTest((prev) => prev + 1);
-                            setSelectedOption(null);
-                        }, 1000);
-                    }}
-
-                    germanText={frageDE.options[3]}
-                    answer={frageDE.answer}
-                /> 
-                */}
 
                 {/* Если к вопросу есть картинка — показываем */}
                 {frageDE.image && imageMap[frageDE.question_number] && (
@@ -287,25 +174,6 @@ export default function TestScreen() {
                 )}
             </ScrollView>
 
-            {/* Кнопка "вперёд" */}
-            <View style={styles.footer}>
-
-                <TouchableOpacity
-                    style={[
-                        styles.navButton,
-                        { backgroundColor: selectedOption === null ? '#aaa' : '#4e4cff' }, // цвет меняется
-                    ]}
-                    onPress={() => {
-                        if (selectedOption === null) return;
-                        goToNextQuestionTest(setQuestionNumberTest);
-                        setSelectedOption(null);
-                    }}
-                    disabled={selectedOption === null} // запрет клика
-                >
-                    <Ionicons name="chevron-forward" size={24} color="white" />
-                </TouchableOpacity>
-
-            </View>
         </View>
     );
 }
