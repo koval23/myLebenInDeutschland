@@ -20,6 +20,17 @@ export const goToNextQuestionState = (setQuestionNumber: React.Dispatch<React.Se
   setQuestionNumber((prev) => Math.min(prev + 1, 10));
 };
 
+export const goToNextQuestionTest = (setQuestionNumber: React.Dispatch<React.SetStateAction<number>>) => {
+  setQuestionNumber((prev) => Math.min(prev + 1, 33));
+};
+
+export const compareAndCount = (a: string, b: string, count: number): number => {
+  if (a === b) {
+    return count + 1;
+  }
+  return count;
+};
+
 export function getFrageByNumberDE(number: number): QuestionDE {
   const index = number - 1;
 

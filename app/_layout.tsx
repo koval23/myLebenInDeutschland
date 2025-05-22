@@ -4,8 +4,8 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { CityProvider } from '@/constants/CityContext'; // добавь это
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 
 export default function RootLayout() {
@@ -24,8 +24,9 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: true, title: 'Home' }} />
-          <Stack.Screen name="questions" options={{ title: 'Alle Frafen' }}/>
-          <Stack.Screen name="states"/>
+          <Stack.Screen name="questions" options={{ title: 'Alle Frafen' }} />
+          <Stack.Screen name="states" />
+          <Stack.Screen name="test" options={{ title: 'Test' }} />
           <Stack.Screen name="dictionary" />
           <Stack.Screen name="+not-found" />
         </Stack>

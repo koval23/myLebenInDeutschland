@@ -1,12 +1,11 @@
 import LanguageSelector from '@/components/LanguageSelector';
 import { ThemedText } from '@/components/ThemedText';
+import { useCity } from '@/constants/CityContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useCity } from '@/constants/CityContext';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -56,6 +55,7 @@ export default function HomeScreen() {
         <View style={styles.buttonBox}>
           <MenuButton title="Allgemaine Frage (300)" onPress={() => router.push('/questions')} />
           <MenuButton title="Bundesland Fragen (10)" onPress={() => router.push('/states')} />
+          <MenuButton title="Test" onPress={() => router.push('/test')} />
           <MenuButton title="Wörterbuch" onPress={() => router.push('/dictionary')} />
         </View>
       </View>
