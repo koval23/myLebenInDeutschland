@@ -80,7 +80,6 @@ export function getFrageByStateDE(state: string, number: number): QuestionDE {
   return stateQuestions[index];
 }
 
-
 export function getFrageByStateRU(state: string, number: number): QuestionDE {
   const index = number - 1;
 
@@ -100,3 +99,16 @@ export function getFrageByStateRU(state: string, number: number): QuestionDE {
   return stateQuestions[index];
 }
 
+export function getRandomIndexes(length: number, count: number): number[] {
+    // 1. Создаём массив от 0 до length - 1
+    const indexes = Array.from({ length }, (_, i) => i);
+    
+    // 2. Перемешиваем массив с помощью алгоритма Fisher–Yates (надёжный способ)
+    for (let i = indexes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // случайный индекс от 0 до i
+        [indexes[i], indexes[j]] = [indexes[j], indexes[i]]; // меняем местами элементы
+    }
+
+    // 3. Возвращаем первые count элементов из перемешанного массива
+    return indexes.slice(0, count);
+}

@@ -1,18 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useState, useCallback } from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { AnswerTest } from '@/components/AnswerTest';
 import { QuestionTest } from '@/components/QuestionTest';
-import { compareAndCount, goToNextQuestionTest } from '@/constants/Functions';
-import { questionsDE, questionsStateDE } from '@/constants/Question'; // массив из 300 общих вопросов
+import { TestResult } from '@/components/Result';
+import { useCity } from '@/constants/CityContext';
+import { compareAndCount, getRandomIndexes, goToNextQuestionTest } from '@/constants/Functions';
+import { imageMapState, questionsDE, questionsStateDE } from '@/constants/Question';
 import { QuestionDE } from '@/constants/Types';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { TestResult } from '@/components/Result';
-
 
 
 // Размер экрана для адаптивного отображения картинки
@@ -33,11 +32,11 @@ export const imageMap: { [key: number]: any } = {
 };
 
 // 🔁 Функция для генерации массива случайных индексов (уникальные)
-function getRandomIndexes(length: number, count: number): number[] {
-    const indexes = Array.from({ length }, (_, i) => i);
-    const shuffled = indexes.sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
-}
+// function getRandomIndexes(length: number, count: number): number[] {
+//     const indexes = Array.from({ length }, (_, i) => i);
+//     const shuffled = indexes.sort(() => Math.random() - 0.5);
+//     return shuffled.slice(0, count);
+// }
 
 export default function TestScreen() {
     const theme = useColorScheme() ?? 'light';
@@ -46,33 +45,59 @@ export default function TestScreen() {
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [correctCount, setCorrectCount] = useState<number>(0); // количество правильных ответов
 
-    const selectedBundesland = 'berlin'; // пока хардкодим, позже заменим на динамичный выбор
+
     const [testQuestions, setTestQuestions] = useState<QuestionDE[]>([]);
+    const { selectedCity } = useCity();
 
     useFocusEffect(
         useCallback(() => {
-            // Генерируем новые вопросы при заходе
+            if (!selectedCity || !questionsStateDE[selectedCity]) return;
+
             const generalIndexes = getRandomIndexes(questionsDE.length, 30);
-            const stateIndexes = getRandomIndexes(questionsStateDE[selectedBundesland].length, 3);
-            const general = generalIndexes.map(i => questionsDE[i]);
-            const state = stateIndexes.map(i => questionsStateDE[selectedBundesland][i]);
+            const stateIndexes = getRandomIndexes(questionsStateDE[selectedCity].length, 3);
+
+
+            const general = generalIndexes.map(i => ({
+                ...questionsDE[i],
+                source: 'general'
+            }));
+            const state = stateIndexes.map(i => ({
+                ...questionsStateDE[selectedCity][i],
+                source: 'state',
+                stateKey: selectedCity
+            }));
+            console.log(state[0]);
+
             const combined = [...general, ...state];
-
             setTestQuestions(combined);
-
-            // Сброс состояния
             setSelectedOption(null);
             setQuestionNumberTest(1);
             AsyncStorage.removeItem('questionNumberTest');
-
-            // return () => {
-            //   // Доп. очистка при уходе (если надо)
-            // };
-        }, [])
+        }, [selectedCity])
     );
+
+
 
     // 🧠 Получаем текущий вопрос по индексу
     const frageDE = testQuestions[questionNumberTest - 1];
+
+    if (!frageDE || frageDE.question_number == null) {
+        return (
+            <View style={styles.container}>
+                <Text style={{ textAlign: 'center', marginTop: 100 }}>
+                    Вопросы загружаются...
+                </Text>
+            </View>
+        );
+    }
+    const key = `${selectedCity}_${frageDE.question_number}`;
+
+
+    const imageSource =
+        'source' in frageDE
+            ? imageMapState[key!]
+            : imageMap[frageDE.question_number];
+
 
     if (testQuestions.length === 0) {
         return (
@@ -81,7 +106,8 @@ export default function TestScreen() {
             </View>
         );
     }
-    // после прохождения
+
+    // после прохождения РЕЗУЛЬАТЫ
     if (questionNumberTest > testQuestions.length) {
         return (
             <TestResult
@@ -93,16 +119,14 @@ export default function TestScreen() {
                     setCorrectCount(0);
 
                     const generalIndexes = getRandomIndexes(questionsDE.length, 30);
-                    const stateIndexes = getRandomIndexes(questionsStateDE[selectedBundesland].length, 3);
+                    const stateIndexes = getRandomIndexes(questionsStateDE[selectedCity].length, 3);
                     const general = generalIndexes.map(i => questionsDE[i]);
-                    const state = stateIndexes.map(i => questionsStateDE[selectedBundesland][i]);
+                    const state = stateIndexes.map(i => questionsStateDE[selectedCity][i]);
                     setTestQuestions([...general, ...state]);
                 }}
             />
         );
     }
-
-
 
     return (
         <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f4f4f4' : '#1c1c1e' }]}>
@@ -238,7 +262,8 @@ export default function TestScreen() {
 
                     germanText={frageDE.options[3]}
                     answer={frageDE.answer}
-                /> */}
+                /> 
+                */}
 
                 {/* Если к вопросу есть картинка — показываем */}
                 {frageDE.image && imageMap[frageDE.question_number] && (
@@ -254,7 +279,7 @@ export default function TestScreen() {
                         }}
                     >
                         <Image
-                            source={imageMap[frageDE.question_number]}
+                            source={imageSource}
                             style={{ width: '100%', height: '100%' }}
                             resizeMode="contain"
                         />
@@ -271,9 +296,9 @@ export default function TestScreen() {
                         { backgroundColor: selectedOption === null ? '#aaa' : '#4e4cff' }, // цвет меняется
                     ]}
                     onPress={() => {
-                        if (selectedOption === null) return; // запрет перехода без выбора
+                        if (selectedOption === null) return;
                         goToNextQuestionTest(setQuestionNumberTest);
-                        setSelectedOption(null); // сбрасываем выбор на следующем вопросе
+                        setSelectedOption(null);
                     }}
                     disabled={selectedOption === null} // запрет клика
                 >

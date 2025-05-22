@@ -12,6 +12,40 @@ export const imageMap: { [key: number]: any } = {
   226: require('@/assets/images/questionImg/226.png'),
 };
 
+export const imageMapState: { [key: string]: any } = {
+  'baden-wurttemberg_1': require('@/assets/images/questionImg/baden-wurttemberg_1.png'),
+  'baden-wurttemberg_8': require('@/assets/images/questionImg/baden-wurttemberg_8.png'),
+  'bayern_1': require('@/assets/images/questionImg/bayern_1.png'),
+  'bayern_8': require('@/assets/images/questionImg/bayern_8.png'),
+  'berlin_1': require('@/assets/images/questionImg/berlin_1.png'),
+  'berlin_8': require('@/assets/images/questionImg/berlin_8.png'),
+  'brandenburg_1': require('@/assets/images/questionImg/brandenburg_1.png'),
+  'brandenburg_8': require('@/assets/images/questionImg/brandenburg_8.png'),
+  'bremen_1': require('@/assets/images/questionImg/bremen_1.png'),
+  'bremen_8': require('@/assets/images/questionImg/bremen_8.png'),
+  'hamburg_1': require('@/assets/images/questionImg/hamburg_1.png'),
+  'hamburg_8': require('@/assets/images/questionImg/hamburg_8.png'),
+  'hessen_1': require('@/assets/images/questionImg/hessen_1.png'),
+  'hessen_8': require('@/assets/images/questionImg/hessen_8.png'),
+  'mecklenburg-vorpommern_1': require('@/assets/images/questionImg/mecklenburg-vorpommern_1.png'),
+  'mecklenburg-vorpommern_8': require('@/assets/images/questionImg/mecklenburg-vorpommern_8.png'),
+  'niedersachsen_1': require('@/assets/images/questionImg/niedersachsen_1.png'),
+  'niedersachsen_8': require('@/assets/images/questionImg/niedersachsen_8.png'),
+  'nordrhein-westfalen_1': require('@/assets/images/questionImg/nordrhein-westfalen_1.png'),
+  'nordrhein-westfalen_8': require('@/assets/images/questionImg/nordrhein-westfalen_8.png'),
+  'rheinland-pfalz_1': require('@/assets/images/questionImg/rheinland-pfalz_1.png'),
+  'rheinland-pfalz_8': require('@/assets/images/questionImg/rheinland-pfalz_8.png'),
+  'saarland_1': require('@/assets/images/questionImg/saarland_1.png'),
+  'saarland_8': require('@/assets/images/questionImg/saarland_8.png'),
+  'sachsen_1': require('@/assets/images/questionImg/sachsen_1.png'),
+  'sachsen_8': require('@/assets/images/questionImg/sachsen_8.png'),
+  'sachsen-anhalt_1': require('@/assets/images/questionImg/sachsen-anhalt_1.png'),
+  'sachsen-anhalt_8': require('@/assets/images/questionImg/sachsen-anhalt_8.png'),
+  'schleswig-holstein_1': require('@/assets/images/questionImg/schleswig-holstein_1.png'),
+  'schleswig-holstein_8': require('@/assets/images/questionImg/schleswig-holstein_8.png'),
+  'thueringen_1': require('@/assets/images/questionImg/thueringen_1.png'),
+  'thueringen_8': require('@/assets/images/questionImg/thueringen_8.png'),
+};
 
 export const questionsDE: QuestionDE[] = [
  {
