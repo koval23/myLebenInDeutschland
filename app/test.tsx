@@ -37,6 +37,7 @@ export default function TestScreen() {
     const [correctCount, setCorrectCount] = useState<number>(0); // количество правильных ответов
 
 
+
     const [testQuestions, setTestQuestions] = useState<QuestionDE[]>([]);
     const { selectedCity } = useCity();
 
@@ -66,6 +67,14 @@ export default function TestScreen() {
         }, [selectedCity])
     );
 
+
+    if (selectedCity === 'state') {
+        return (
+            <View style={[styles.container, styles2.centered, { backgroundColor: theme === 'light' ? '#f4f4f4' : '#1c1c1e' }]}>
+                <Text style={styles2.selectCityText}>Пожалуйста, выберите город</Text>
+            </View>
+        );
+    }
 
 
     // 🧠 Получаем текущий вопрос по индексу
@@ -214,4 +223,20 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
 
+});
+const styles2 = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    centered: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+    },
+    selectCityText: {
+        fontSize: 22,
+        color: 'white',
+        textAlign: 'center',
+    },
+    // ...остальные стили как есть
 });
