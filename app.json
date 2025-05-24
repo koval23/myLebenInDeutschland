@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/myIcon.png",
         "backgroundColor": "#808080"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.yuriijava.LebenInDeutschland"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0894aa95-23be-461b-b06e-a5720cd819e1"
+      }
     }
   }
 }

@@ -11,7 +11,7 @@ import { useCity } from '@/constants/CityContext';
 
 import { useLayoutEffect } from 'react';
 import { useNavigation } from 'expo-router';
-import {stateNameMap} from '@/constants/Question';
+import { stateNameMap } from '@/constants/Question';
 
 
 
@@ -63,7 +63,7 @@ export default function StatesScreen() {
   const frageStateDE = getFrageByStateDE(selectedCity, questionNumberState);
   const frageStateRU = getFrageByStateRU(selectedCity, questionNumberState);
   const key = `${selectedCity}_${frageStateDE.question_number}`;
-  
+
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -81,6 +81,13 @@ export default function StatesScreen() {
       </View>
     );
   }
+  const answerOptions = [
+    { id: 1, germanText: frageStateDE.options[0], russianText: frageStateRU.options[0] },
+    { id: 2, germanText: frageStateDE.options[1], russianText: frageStateRU.options[1] },
+    { id: 3, germanText: frageStateDE.options[2], russianText: frageStateRU.options[2] },
+    { id: 4, germanText: frageStateDE.options[3], russianText: frageStateRU.options[3] },
+  ];
+
   return (
     <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f4f4f4' : '#1c1c1e' }]}>
       <ScrollView key={questionNumberState}
@@ -94,46 +101,18 @@ export default function StatesScreen() {
           couuntAllFragen={10}
         />
 
-        <AnswerOption
-          key={1}
-          id={1}
-          selected={selectedOption === 1}
-          onSelect={setSelectedOption}
-          showTranslation={showTranslationState}
-          germanText={frageStateDE.options[0]}
-          russianText={frageStateRU.options[0]}
-          answer={frageStateDE.answer}
-        />
-        <AnswerOption
-          key={2}
-          id={2}
-          selected={selectedOption === 2}
-          onSelect={setSelectedOption}
-          showTranslation={showTranslationState}
-          germanText={frageStateDE.options[1]}
-          russianText={frageStateRU.options[1]}
-          answer={frageStateDE.answer}
-        />
-        <AnswerOption
-          key={3}
-          id={3}
-          selected={selectedOption === 3}
-          onSelect={setSelectedOption}
-          showTranslation={showTranslationState}
-          germanText={frageStateDE.options[2]}
-          russianText={frageStateRU.options[2]}
-          answer={frageStateDE.answer}
-        />
-        <AnswerOption
-          key={4}
-          id={4}
-          selected={selectedOption === 4}
-          onSelect={setSelectedOption}
-          showTranslation={showTranslationState}
-          germanText={frageStateDE.options[3]}
-          russianText={frageStateRU.options[3]}
-          answer={frageStateDE.answer}
-        />
+        {answerOptions.map(option => (
+          <AnswerOption
+            key={option.id}
+            id={option.id}
+            selected={selectedOption === option.id}
+            onSelect={setSelectedOption}
+            showTranslation={showTranslationState}
+            germanText={option.germanText}
+            russianText={option.russianText}
+            answer={frageStateDE.answer}
+          />
+        ))}
 
         {frageStateDE.image && imageMapState[key] && (
           <View

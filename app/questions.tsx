@@ -37,6 +37,13 @@ export default function QuestionsScreen() {
   const frageDE = getFrageByNumberDE(questionNumber);
   const frageRU = getFrageByNumberRU(questionNumber);
 
+  const answerOptions = [
+    { id: 1, textIndex: 0 },
+    { id: 2, textIndex: 1 },
+    { id: 3, textIndex: 2 },
+    { id: 4, textIndex: 3 },
+  ];
+
   return (
     <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f4f4f4' : '#1c1c1e' }]}>
       <ScrollView key={questionNumber}
@@ -49,47 +56,19 @@ export default function QuestionsScreen() {
           questionNumber={questionNumber}
           couuntAllFragen={300}
         />
-
-        <AnswerOption
-          key={1}
-          id={1}
-          selected={selectedOption === 1}
-          onSelect={setSelectedOption}
-          showTranslation={showTranslation}
-          germanText={frageDE.options[0]}
-          russianText={frageRU.options[0]}
-          answer={frageDE.answer}
-        />
-        <AnswerOption
-          key={2}
-          id={2}
-          selected={selectedOption === 2}
-          onSelect={setSelectedOption}
-          showTranslation={showTranslation}
-          germanText={frageDE.options[1]}
-          russianText={frageRU.options[1]}
-          answer={frageDE.answer}
-        />
-        <AnswerOption
-          key={3}
-          id={3}
-          selected={selectedOption === 3}
-          onSelect={setSelectedOption}
-          showTranslation={showTranslation}
-          germanText={frageDE.options[2]}
-          russianText={frageRU.options[2]}
-          answer={frageDE.answer}
-        />
-        <AnswerOption
-          key={4}
-          id={4}
-          selected={selectedOption === 4}
-          onSelect={setSelectedOption}
-          showTranslation={showTranslation}
-          germanText={frageDE.options[3]}
-          russianText={frageRU.options[3]}
-          answer={frageDE.answer}
-        />
+{/* 4 варианта ответа */}
+        {answerOptions.map(option => (
+          <AnswerOption
+            key={option.id}
+            id={option.id}
+            selected={selectedOption === option.id}
+            onSelect={setSelectedOption}
+            showTranslation={showTranslation}
+            germanText={frageDE.options[option.textIndex]}
+            russianText={frageRU.options[option.textIndex]}
+            answer={frageDE.answer}
+          />
+        ))}
 
         {frageDE.image && imageMap[frageDE.question_number] && (
           <View
