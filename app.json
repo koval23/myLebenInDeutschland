@@ -13,8 +13,7 @@
       "bundleIdentifier": "com.yuriijava.LebenInDeutschland",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
-    },
+      },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/myIcon.png",
